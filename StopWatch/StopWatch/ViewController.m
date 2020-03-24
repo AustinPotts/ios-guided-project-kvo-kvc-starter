@@ -12,6 +12,9 @@
 
 // TODO: Create a KVOContext to identify the StopWatch observer
 
+// This is unique & specific to our code file
+void *KVOContext = &KVOContext; //16262782992
+// & = ADDRESS OF
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
@@ -77,12 +80,47 @@
         
         // didSet
 		// TODO: Setup KVO - Add Observers
+        
+        // void * = ID = AnyObject (Void Pointer) ( create void *KVOContext = &KVOContext; )
+        //context = unique identifying information
+        [_stopwatch addObserver:self forKeyPath:@"running" options:0 context:KVOContext];
+        [_stopwatch addObserver:self forKeyPath:@"elapsedTime" options:0 context:KVOContext];
     }
     
 }
 
 
 // TODO: Review docs and implement observerValueForKeyPath
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    // Checking if we have context
+    if (context == KVOContext) {
+        NSLog(@"running: %@", [object valueForKeyPath:keyPath]);
+        
+        //Checking Key Path
+        
+    
+        if ([keyPath isEqualToString:@"running"]){
+            
+            //What do I want to do?
+            [self updateViews];
+            
+        } else if ([keyPath isEqualToString:@"elapsedTime"]) {
+            
+            [self updateViews];
+            
+        }
+        
+        
+        
+        
+        
+        
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
 
 
 - (void)dealloc {

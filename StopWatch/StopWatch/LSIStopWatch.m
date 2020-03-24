@@ -54,6 +54,8 @@
 	// time so it doesn't start from 0 each time
 	
     self.elapsedTime = [[NSDate date] timeIntervalSinceDate:self.startDate] + self.previouslyAccumulatedTime;
+    
+  //  NSLog(@"time: %0.2f", self.elapsedTime);
 }
 
 
