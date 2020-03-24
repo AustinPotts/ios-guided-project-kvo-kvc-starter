@@ -75,16 +75,23 @@ void *KVOContext = &KVOContext; //16262782992
         
         // willSet
 		// TODO: Cleanup KVO - Remove Observers
+        [_stopwatch removeObserver:self forKeyPath:@"running" context:KVOContext];
+        [_stopwatch removeObserver:self forKeyPath:@"elapsedTime" context:KVOContext];
+        
 
         _stopwatch = stopwatch;
         
         // didSet
 		// TODO: Setup KVO - Add Observers
         
+        
+        
         // void * = ID = AnyObject (Void Pointer) ( create void *KVOContext = &KVOContext; )
         //context = unique identifying information
-        [_stopwatch addObserver:self forKeyPath:@"running" options:0 context:KVOContext];
-        [_stopwatch addObserver:self forKeyPath:@"elapsedTime" options:0 context:KVOContext];
+        
+        // NSKeyValueObservingOptionInitial sends a notifaction to execute 
+        [_stopwatch addObserver:self forKeyPath:@"running" options:NSKeyValueObservingOptionInitial context:KVOContext];
+        [_stopwatch addObserver:self forKeyPath:@"elapsedTime" options:NSKeyValueObservingOptionInitial context:KVOContext];
     }
     
 }
@@ -95,8 +102,10 @@ void *KVOContext = &KVOContext; //16262782992
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     // Checking if we have context
+    
+    //KVO is one to many
     if (context == KVOContext) {
-        NSLog(@"running: %@", [object valueForKeyPath:keyPath]);
+        NSLog(@"%@: %@", keyPath, [object valueForKeyPath:keyPath]);
         
         //Checking Key Path
         
@@ -124,7 +133,9 @@ void *KVOContext = &KVOContext; //16262782992
 
 
 - (void)dealloc {
-	// TODO: Stop observing KVO (otherwise it will crash randomly)
+	// Stop observing KVO (otherwise it will crash randomly)
+    
+    self.stopwatch = nil;
     
 }
 

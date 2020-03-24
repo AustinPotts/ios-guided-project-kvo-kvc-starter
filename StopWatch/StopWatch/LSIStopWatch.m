@@ -53,6 +53,7 @@
 	// If you pause/start the timer it will keep track of the original
 	// time so it doesn't start from 0 each time
 	
+    // _elapsedTime is NOT KVC Compliant. Use either dot dyntax or setter method when modifying it 
     self.elapsedTime = [[NSDate date] timeIntervalSinceDate:self.startDate] + self.previouslyAccumulatedTime;
     
   //  NSLog(@"time: %0.2f", self.elapsedTime);
